@@ -1,8 +1,8 @@
 import os
 import logging
 from flask import Flask, request, jsonify
-from video_generator_migration import VideoGenerator
-from models_migration import db, VideoGeneration
+from video_generator import VideoGenerator
+from models import db, VideoGeneration
 from datetime import datetime
 
 # Configure logging
