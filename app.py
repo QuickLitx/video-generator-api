@@ -30,6 +30,40 @@ with app.app_context():
 
 # Initialize services
 video_generator = VideoGenerator()
+@app.route('/', methods=['GET'])
+def index():
+    """Root endpoint - API status"""
+    return jsonify({
+        "status": "online",
+        "service": "Video Generator API",
+        "version": "1.0",
+        "endpoints": {
+            "startup": "/startup (POST)",
+            "generate_video": "/generate-video (POST)",
+            "health": "/health (GET)"
+        },
+        "timestamp": datetime.utcnow().isoformat()
+    })
+
+@app.route('/health', methods=['GET'])
+def health():
+    """Health check endpoint"""
+    try:
+        db.session.execute(db.text('SELECT 1'))
+        db.session.commit()
+        
+        return jsonify({
+            "status": "healthy",
+            "database": "connected",
+            "timestamp": datetime.utcnow().isoformat()
+        })
+    except Exception as e:
+        return jsonify({
+            "status": "unhealthy",
+            "database": "disconnected",
+            "error": str(e),
+            "timestamp": datetime.utcnow().isoformat()
+        }), 500
 
 @app.route('/startup', methods=['POST'])
 def startup_trigger():
